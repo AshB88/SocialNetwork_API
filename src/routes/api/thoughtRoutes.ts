@@ -9,7 +9,7 @@ import {
     deleteThought,
     addReaction,
     removeReaction
-} from '../../controllers/thoughtController';
+} from '../../controllers/thoughtController.js';
 
 // /api/thoughts
 router.route('/').get(getThoughts).post(createThought);
