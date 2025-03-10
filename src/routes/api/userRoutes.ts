@@ -10,7 +10,7 @@ import {
     deleteUser,
     addFriend,
     removeFriend
-} from '../../controllers/userController';
+} from '../../controllers/userController.js';
 
 // /api/users
 router.route('/').get(getUsers).post(createUser);
@@ -19,6 +19,6 @@ router.route('/').get(getUsers).post(createUser);
 router.route('/:userId').get(getSingleUser).put(updateUser).delete(deleteUser);
 
 // /api/users/:userId/friends/:friendId
-router.route('/').post(addFriend).delete(removeFriend);
+router.route('/:userId/friends/:friendId').post(addFriend).delete(removeFriend);
 
 export default router;

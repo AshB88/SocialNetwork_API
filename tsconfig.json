@@ -34,6 +34,4 @@
     "useUnknownInCatchVariables": true /* Ensure 'unknown' is used for catch clause variables. */
   },
   "include": ["src"]
-//"include": ["src/**/*"],
-//"exclude": ["node_modules", "dist"]
 }
