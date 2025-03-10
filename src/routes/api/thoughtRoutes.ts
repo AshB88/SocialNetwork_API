@@ -3,7 +3,7 @@ const router = Router();
 
 import { 
     getThoughts, 
-    getThoughtById, 
+    getSingleThought, 
     createThought,
     updateThought,
     deleteThought,
@@ -15,7 +15,7 @@ import {
 router.route('/').get(getThoughts).post(createThought);
 
 // /api/thoughts/:thoughtId
-router.route('/:thoughId').get(getThoughtById).put(updateThought).delete(deleteThought);
+router.route('/:thoughId').get(getSingleThought).put(updateThought).delete(deleteThought);
 
 // /api/thoughts/:thoughtId/reactions
 router.route('/:thoughtId/reactions').post(addReaction);
