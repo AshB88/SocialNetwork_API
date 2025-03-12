@@ -37,6 +37,11 @@ const reactionSchema = new Schema<IReaction>({
 {
     toJSON: {
         getters: true,
+        // removes the __v field
+        transform: (_doc, ret) => {
+            delete ret.__v;
+            return ret;
+        }        
     },
     id: false,
 });
