@@ -38,12 +38,13 @@ export const createThought = async (req: Request, res: Response) => {
         );
 
         if (!updatedUser) {
-            res.status(404).json({ message: 'User could not be found' });
+            return res.status(404).json({ message: 'User could not be found' });
         }
 
-        res.json(dbThoughtData);
+        return res.json(dbThoughtData);
+
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json(err);
     }
 }
 
@@ -92,33 +93,53 @@ export const deleteThought = async(req: Request, res: Response) => {
 }
 
 // add reaction
-export const addReaction = async(req: Request, res: Response) => {
+export const addReaction = async (req: Request, res: Response) => {
     try {
-        await Thought.findOneAndUpdate(
+        // Check if the username exists in the User collection
+        const user = await User.findOne({ username: req.body.username });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Invalid username. Reaction could not be added' });
+        }
+
+        // Add the reaction to the thought
+        const thought = await Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
             { $push: { reactions: req.body } },
             { new: true, runValidators: true }
         );
 
-        res.json(req.body);
+        return res.json(thought);
 
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json(err);
     }
 }
 
 // delete reaction
-export const removeReaction = async(req: Request, res: Response) => {
+export const removeReaction = async (req: Request, res: Response) => {
     try {
-        await Thought.findOneAndUpdate(
+        const thought = await Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
             { $pull: { reactions: { reactionId: req.params.reactionId } } },
             { new: true }
         );
 
-        res.json({ message: 'Reaction deleted' });
-        
+        if (!thought) {
+            return res.status(404).json({ message: 'Thought could not be found' });
+        }
+
+        // Check if the reaction was actually removed
+        const reactionExists = thought.reactions.some(
+            (reaction) => reaction.reactionId.toString() === req.params.reactionId
+        );
+
+        if (reactionExists) {
+            return res.status(404).json({ message: 'Reaction could not be found' });
+        }
+
+        return res.json({ message: 'Reaction deleted' });
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json(err);
     }
 }
